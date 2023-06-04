@@ -1,15 +1,17 @@
 package com.ru.simplemvvm.application.dependencies
 
-import com.ru.simplemvvm.application.data.FirstRepository
-import com.ru.simplemvvm.application.data.FirstRepositoryImpl
+import com.ru.simplemvvm.application.data.repository.InMemoryColorsRepository
+import com.ru.simplemvvm.application.domain.repository.ColorRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
     @Binds
-    abstract fun bindFirstRepository(firstRepository: FirstRepositoryImpl): FirstRepository
+    @Singleton
+    abstract fun bindColorRepository(colorRepository: InMemoryColorsRepository): ColorRepository
 }

@@ -13,7 +13,6 @@ import com.ru.simplemvvm.foundation.views.activity.ActivityDelegateHolder
 
 
 inline fun <reified VM: BaseViewModel> Fragment.screenViewModel(factory: HiltViewModelFactory) = viewModels<VM> {
-    val application = requireActivity().application
     val screen = requireArguments().getSerializable(ARG_SCREEN) as BaseScreen
     val activityScopeViewModel = (requireActivity() as ActivityDelegateHolder).delegate.getActivityScopeViewModel()
     val dependencies = listOf(screen) + activityScopeViewModel.sideEffectMediators

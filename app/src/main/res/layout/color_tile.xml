@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingTop="16dp">
+
+    <FrameLayout
+        android:id="@+id/colorContainer"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="@dimen/dp_60"
+        android:background="@color/black"
+        android:padding="@dimen/dp_2"
+        android:layout_gravity="center_horizontal">
+
+        <View
+            android:id="@+id/colorView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:background="#0088ff"/>
+
+    <ImageView
+        android:id="@+id/selectedIndicatorThemeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:src="@drawable/ic_selected"
+        android:contentDescription="@string/selected"
+        tools:visibility="visible"
+        android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/colorNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/sp_16"
+        android:fontFamily="casual"
+        android:layout_marginTop="@dimen/dp_4"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:lines="1"
+        android:ellipsize="end"
+        tools:text="Color Name"/>
+
+</LinearLayout>

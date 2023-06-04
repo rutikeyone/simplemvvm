@@ -1,15 +1,20 @@
 package com.ru.simplemvvm.foundation.views
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.ru.simplemvvm.application.dependencies.viewmodel.HiltViewModelFactory
-import com.ru.simplemvvm.application.dependencies.viewmodel.screenViewModel
+import com.ru.simplemvvm.foundation.model.ErrorResult
+import com.ru.simplemvvm.foundation.model.PendingResult
 import com.ru.simplemvvm.foundation.utils.MainThreadExecutor
 import com.ru.simplemvvm.foundation.utils.ResourceActions
 import java.lang.Exception
 import java.util.concurrent.Executor
-import kotlin.reflect.KProperty
+import com.ru.simplemvvm.foundation.model.Result
+import com.ru.simplemvvm.foundation.model.SuccessResult
+import com.ru.simplemvvm.foundation.views.activity.ActivityDelegateHolder
 
 abstract class BaseFragment<T : BaseViewModel>(
     @LayoutRes contentLayoutId: Int,
@@ -19,23 +24,29 @@ abstract class BaseFragment<T : BaseViewModel>(
     protected abstract val viewModel: T?
 
     private val executor: Executor = MainThreadExecutor()
-    protected val _target = ResourceActions<T>(executor)
+    protected val targetResource = ResourceActions<T>(executor)
 
     val target: ResourceActions<T>
         get() {
-            if(viewModel != null && _target.resource == null) {
-                this._target.resource = viewModel
+            if(viewModel != null && targetResource.resource == null) {
+                this.targetResource.resource = viewModel
             }
-            return _target
+            return targetResource
         }
 
-    //TODO
-    fun notifyScreenUpdates() {}
+    fun notifyScreenUpdates() {
+        (requireActivity() as ActivityDelegateHolder).delegate.notifyScreenUpdates()
+    }
 
-    //TODO
     fun <T> renderResult(root: ViewGroup, result: Result<T>,
                          onPending: () -> Unit, onError: (e: Exception) -> Unit,
                          onSuccess: (T) -> Unit) {
+        root.children.forEach { it.visibility = View.GONE }
+        when(result) {
+            is SuccessResult -> onSuccess(result.data)
+            is ErrorResult -> onError(result.exception)
+            is PendingResult -> onPending()
+        }
     }
 
     override fun onDestroy() {
