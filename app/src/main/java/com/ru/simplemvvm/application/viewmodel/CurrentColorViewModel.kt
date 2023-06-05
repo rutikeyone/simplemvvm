@@ -3,7 +3,6 @@ package com.ru.simplemvvm.application.viewmodel
 import android.Manifest
 import com.ru.simplemvvm.R
 import com.ru.simplemvvm.application.data.model.NamedColorModel
-import com.ru.simplemvvm.application.dependencies.viewmodel.HiltViewModelFactory
 import com.ru.simplemvvm.application.domain.repository.ColorRepository
 import com.ru.simplemvvm.application.view.ChangeColorFragment
 import com.ru.simplemvvm.foundation.model.PendingResult
@@ -20,18 +19,15 @@ import com.ru.simplemvvm.foundation.sideeffects.toasts.Toasts
 import com.ru.simplemvvm.foundation.views.BaseViewModel
 import com.ru.simplemvvm.foundation.views.LiveResult
 import com.ru.simplemvvm.foundation.views.MutableLiveResult
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
-class CurrentColorViewModel @AssistedInject constructor(
-    @Assisted private val navigator: Navigator,
-    @Assisted private val permissions: Permissions,
-    @Assisted private val toasts: Toasts,
-    @Assisted private val dialogs: Dialogs,
-    @Assisted private val resources: Resources,
-    @Assisted private val intents: Intents,
+class CurrentColorViewModel(
+    private val navigator: Navigator,
+    private val permissions: Permissions,
+    private val toasts: Toasts,
+    private val dialogs: Dialogs,
+    private val resources: Resources,
+    private val intents: Intents,
     private val colorRepository: ColorRepository,
 ) : BaseViewModel() {
 
@@ -51,7 +47,8 @@ class CurrentColorViewModel @AssistedInject constructor(
     override fun onResult(result: Any) {
         super.onResult(result)
         if(result is NamedColorModel) {
-
+            val message = resources.getString(R.string.changed_color, result.name)
+            toasts.toast(message)
         }
     }
 
@@ -105,19 +102,4 @@ class CurrentColorViewModel @AssistedInject constructor(
         positiveButton = resources.getString(R.string.action_open),
         negativeButton = resources.getString(R.string.action_cancel),
     )
-
-
-
-    @AssistedFactory
-    interface Factory: HiltViewModelFactory {
-        fun create(
-            navigator: Navigator,
-            permissions: Permissions,
-            toasts: Toasts,
-            dialogs: Dialogs,
-            resources: Resources,
-            intents: Intents,
-        ): CurrentColorViewModel
-    }
-
 }

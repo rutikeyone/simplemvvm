@@ -8,13 +8,11 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class InMemoryColorsRepository @Inject constructor(
+class InMemoryColorsRepository(
     private val ioDispatchers: IoDispatcher,
 ): ColorRepository {
     private var currentColor: NamedColorModel = AVAILABLE_COLORS[0]

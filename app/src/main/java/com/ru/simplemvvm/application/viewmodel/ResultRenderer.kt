@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import com.ru.simplemvvm.foundation.model.Result
 
-fun <T> BaseFragment<*>.renderSimpleResult(root: ViewGroup, result: Result<T>, onSuccess: (T) -> Unit) {
+fun <T> BaseFragment.renderSimpleResult(root: ViewGroup, result: Result<T>, onSuccess: (T) -> Unit) {
     val binding = PartResultBinding.bind(root)
 
     renderResult(
@@ -35,7 +35,7 @@ fun <T> BaseFragment<*>.renderSimpleResult(root: ViewGroup, result: Result<T>, o
     )
 }
 
-fun <T> BaseFragment<*>.collectFlow(flow: Flow<T>, onCollect: (T) -> Unit) {
+fun <T> BaseFragment.collectFlow(flow: Flow<T>, onCollect: (T) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collect {
@@ -45,6 +45,6 @@ fun <T> BaseFragment<*>.collectFlow(flow: Flow<T>, onCollect: (T) -> Unit) {
     }
 }
 
-fun BaseFragment<*>.onTryAgain(root:View, onTryAgainPressed: () -> Unit) {
+fun BaseFragment.onTryAgain(root:View, onTryAgainPressed: () -> Unit) {
     root.findViewById<Button>(R.id.tryAgainButton).setOnClickListener { onTryAgainPressed() }
 }

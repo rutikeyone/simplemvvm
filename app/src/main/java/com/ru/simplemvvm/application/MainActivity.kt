@@ -13,9 +13,7 @@ import com.ru.simplemvvm.foundation.sideeffects.permissions.plugin.PermissionPlu
 import com.ru.simplemvvm.foundation.sideeffects.resources.plugin.ResourcesPlugin
 import com.ru.simplemvvm.foundation.sideeffects.toasts.plugin.ToastsPlugin
 import com.ru.simplemvvm.foundation.views.activity.BaseActivity
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity: BaseActivity() {
     override fun registerPlugins(manager: SideEffectPluginManager) = with (manager) {
         val navigator = createNavigator()

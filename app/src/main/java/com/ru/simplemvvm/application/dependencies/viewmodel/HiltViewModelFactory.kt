@@ -1,3 +1,0 @@
-package com.ru.simplemvvm.application.dependencies.viewmodel
-
-interface HiltViewModelFactory

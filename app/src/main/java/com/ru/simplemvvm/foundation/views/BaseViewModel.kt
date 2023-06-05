@@ -7,7 +7,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import com.ru.simplemvvm.foundation.model.ErrorResult
-import com.ru.simplemvvm.foundation.model.PendingResult
 import com.ru.simplemvvm.foundation.utils.Event
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -21,7 +20,6 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import com.ru.simplemvvm.foundation.model.Result
 import com.ru.simplemvvm.foundation.model.SuccessResult
-import kotlinx.coroutines.flow.collect
 
 typealias LiveEvent<T> = LiveData<Event<T>>
 typealias MutableLiveEvent<T> = MutableLiveData<Event<T>>
@@ -33,7 +31,7 @@ typealias MediatorLiveResult<T> = MediatorLiveData<Result<T>>
 typealias ResultFlow<T> = Flow<Result<T>>
 typealias ResultMutableStateFlow<T> = MutableStateFlow<Result<T>>
 
-open class BaseViewModel: ViewModel() {
+open class BaseViewModel  : ViewModel() {
     private val coroutineContext = SupervisorJob() + Dispatchers.Main.immediate + CoroutineExceptionHandler(::coroutineExceptionHandler)
 
     protected val viewModelScope = CoroutineScope(coroutineContext)

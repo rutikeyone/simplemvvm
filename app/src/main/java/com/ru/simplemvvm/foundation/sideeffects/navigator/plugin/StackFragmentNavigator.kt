@@ -57,8 +57,8 @@ class StackFragmentNavigator(
 
     override fun onBackPressed(): Boolean {
         val currentFragment = getCurrentFragment()
-        return if(currentFragment is BaseFragment<*>) {
-            currentFragment.target.resource?.onBackPressed() ?: false
+        return if(currentFragment is BaseFragment) {
+            currentFragment.viewModel.onBackPressed()
         } else {
             false
         }
@@ -103,8 +103,8 @@ class StackFragmentNavigator(
 
     private fun publishResults(fragment: Fragment) {
         val result = result?.getValue() ?: return
-        if(fragment is BaseFragment<*>){
-            fragment.target.resource?.onResult(result)
+        if(fragment is BaseFragment){
+            fragment.viewModel.onResult(result)
         }
     }
 
