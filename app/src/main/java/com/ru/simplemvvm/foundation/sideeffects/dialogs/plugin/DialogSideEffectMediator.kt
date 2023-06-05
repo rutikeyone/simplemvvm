@@ -21,7 +21,17 @@ class DialogSideEffectMediator: SideEffectMediator<DialogSideEffectImpl>(), Dial
             retainedState.record = null
         }
         val record = DialogRecord(wrappedEmitter, dialogConfig)
+        wrappedEmitter.setCancelListener {
+            target { implementation -> 
+                implementation.removeDialog()
+            }
+        }
 
+        target {implementation ->
+            implementation.showDialog(record)
+        }
+
+        retainedState.record = record
     }
 
     class DialogRecord(

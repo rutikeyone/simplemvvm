@@ -40,26 +40,24 @@ class DialogSideEffectImpl(
     fun showDialog(record: DialogRecord) {
         val config = record.config
         val emitter = record.emitter
-        val builder = AlertDialog.Builder(requireActivity())
+        val builder = androidx.appcompat.app.AlertDialog.Builder(requireActivity())
             .setTitle(config.title)
             .setMessage(config.message)
             .setCancelable(config.cancellable)
-        if(config.positiveButton != null) {
-            builder.setPositiveButton(config.positiveButton) {_, _, ->
+        if (config.positiveButton != null) {
+            builder.setPositiveButton(config.positiveButton) { _, _ ->
                 emitter.emit(SuccessResult(true))
                 dialog = null
             }
         }
-
-        if(config.negativeButton != null) {
-            builder.setPositiveButton(config.negativeButton) {_, _, ->
+        if (config.negativeButton != null) {
+            builder.setNegativeButton(config.negativeButton) { _, _ ->
                 emitter.emit(SuccessResult(false))
                 dialog = null
             }
         }
-
-        if(config.cancellable) {
-            builder.setPositiveButton(config.negativeButton) {_, _, ->
+        if (config.cancellable) {
+            builder.setOnCancelListener {
                 emitter.emit(SuccessResult(false))
                 dialog = null
             }

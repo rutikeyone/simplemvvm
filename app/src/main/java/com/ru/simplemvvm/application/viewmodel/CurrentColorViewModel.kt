@@ -1,6 +1,7 @@
 package com.ru.simplemvvm.application.viewmodel
 
 import android.Manifest
+import com.ru.simplemvvm.R
 import com.ru.simplemvvm.application.data.model.NamedColorModel
 import com.ru.simplemvvm.application.dependencies.viewmodel.HiltViewModelFactory
 import com.ru.simplemvvm.application.domain.repository.ColorRepository
@@ -8,9 +9,14 @@ import com.ru.simplemvvm.application.view.ChangeColorFragment
 import com.ru.simplemvvm.foundation.model.PendingResult
 import com.ru.simplemvvm.foundation.model.SuccessResult
 import com.ru.simplemvvm.foundation.model.takeSuccess
+import com.ru.simplemvvm.foundation.sideeffects.dialogs.Dialogs
+import com.ru.simplemvvm.foundation.sideeffects.dialogs.plugin.DialogConfig
+import com.ru.simplemvvm.foundation.sideeffects.intents.Intents
 import com.ru.simplemvvm.foundation.sideeffects.navigator.Navigator
 import com.ru.simplemvvm.foundation.sideeffects.permissions.Permissions
 import com.ru.simplemvvm.foundation.sideeffects.permissions.plugin.PermissionStatus
+import com.ru.simplemvvm.foundation.sideeffects.resources.Resources
+import com.ru.simplemvvm.foundation.sideeffects.toasts.Toasts
 import com.ru.simplemvvm.foundation.views.BaseViewModel
 import com.ru.simplemvvm.foundation.views.LiveResult
 import com.ru.simplemvvm.foundation.views.MutableLiveResult
@@ -22,6 +28,10 @@ import kotlinx.coroutines.launch
 class CurrentColorViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted private val permissions: Permissions,
+    @Assisted private val toasts: Toasts,
+    @Assisted private val dialogs: Dialogs,
+    @Assisted private val resources: Resources,
+    @Assisted private val intents: Intents,
     private val colorRepository: ColorRepository,
 ) : BaseViewModel() {
 
@@ -60,12 +70,20 @@ class CurrentColorViewModel @AssistedInject constructor(
         val permission = Manifest.permission.ACCESS_FINE_LOCATION
         val hasPermission = permissions.hasPermissions(permission)
         if(hasPermission) {
-
+            dialogs.show(createPermissionAlreadyGrantedDialog())
         } else {
             when(permissions.requestPermissions(permission)) {
-                PermissionStatus.GRANTED -> {}
-                PermissionStatus.DENIED -> {}
-                PermissionStatus.DENIED_FOREVER -> {}
+                PermissionStatus.GRANTED -> {
+                    toasts.toast(resources.getString(R.string.permissions_grated))
+                }
+                PermissionStatus.DENIED -> {
+                    toasts.toast(resources.getString(R.string.permissions_denied))
+                }
+                PermissionStatus.DENIED_FOREVER -> {
+                    if(dialogs.show(createAskForLaunchingAppSettingsDialog())) {
+                        intents.openSettings()
+                    }
+                }
             }
         }
     }
@@ -75,11 +93,30 @@ class CurrentColorViewModel @AssistedInject constructor(
         into(_currentColorState) { colorRepository.getCurrentColor() }
     }
 
+    private fun createPermissionAlreadyGrantedDialog() = DialogConfig(
+        title = resources.getString(R.string.dialog_permissions_title),
+        message = resources.getString(R.string.permissions_already_granted),
+        positiveButton = resources.getString(R.string.action_ok),
+    )
+
+    private fun createAskForLaunchingAppSettingsDialog() = DialogConfig(
+        title = resources.getString(R.string.dialog_permissions_title),
+        message = resources.getString(R.string.open_app_settings_message),
+        positiveButton = resources.getString(R.string.action_open),
+        negativeButton = resources.getString(R.string.action_cancel),
+    )
+
+
+
     @AssistedFactory
     interface Factory: HiltViewModelFactory {
         fun create(
             navigator: Navigator,
             permissions: Permissions,
+            toasts: Toasts,
+            dialogs: Dialogs,
+            resources: Resources,
+            intents: Intents,
         ): CurrentColorViewModel
     }
 

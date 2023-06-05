@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SimpleMVVM</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="try_again">Попробовать еще раз</string>
-    <string name="error_try_again_later">При загрузке данных произошла ошибка.</string>
+    <string name="changed_color">Цвет был изменен на: %1$s</string>
     <string name="change_color">Изменить цвет</string>
-    <string name="request_permissions">Запросить разрешения</string>
+
+    <string name="change_color_screen_title">Изменить цвет (%1$s)</string>
+    <string name="change_color_screen_title_simple">Изменить цвет</string>
+    <string name="cancel">Отменить</string>
+    <string name="save">Сохранить</string>
+    <string name="selected">Выбранный</string>
+    <string name="error_try_again_later">Ошибка! Пожалуйста, повторите попытку позже</string>
+    <string name="try_again">Попробовать еще раз</string>
+
+    <string name="error_happened">Не удается сохранить цвет</string>
+
+    <string name="request_permissions">Запросить разрешение</string>
+    <string name="dialog_permissions_title">Разрешения</string>
+    <string name="permissions_already_granted">Разрешение уже получено</string>
+    <string name="action_open">Открыть</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Отменить</string>
+    <string name="open_app_settings_message">Кажется, вам навсегда отказали в разрешениях. Вы можете изменить свое решение в настройках приложения.  Открыть настройки приложения?</string>
+    <string name="permissions_grated">Поздравляю! Разрешение было предоставлено</string>
+    <string name="permissions_denied">Упс, в разрешениях отказано!</string>
+
+    <string name="percentage_value">%1$d%%</string>
+    <string name="please_wait">Пожалуйста подождите…</string>
 </resources>
