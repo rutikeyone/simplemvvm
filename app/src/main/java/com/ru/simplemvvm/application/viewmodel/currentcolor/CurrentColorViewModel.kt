@@ -1,10 +1,10 @@
-package com.ru.simplemvvm.application.viewmodel
+package com.ru.simplemvvm.application.viewmodel.currentcolor
 
 import android.Manifest
 import com.ru.simplemvvm.R
 import com.ru.simplemvvm.application.data.model.NamedColorModel
 import com.ru.simplemvvm.application.domain.repository.ColorRepository
-import com.ru.simplemvvm.application.view.ChangeColorFragment
+import com.ru.simplemvvm.application.view.changecolor.ChangeColorFragment
 import com.ru.simplemvvm.foundation.model.PendingResult
 import com.ru.simplemvvm.foundation.model.SuccessResult
 import com.ru.simplemvvm.foundation.model.takeSuccess
@@ -54,7 +54,7 @@ class CurrentColorViewModel(
 
     fun navigateToChangeColor() {
         val currentColor = currentColorState.value.takeSuccess() ?: return
-        val screen = ChangeColorFragment.Screen(currentColor)
+        val screen = ChangeColorFragment.Screen(currentColor.id)
         navigator.launch(screen)
 
     }

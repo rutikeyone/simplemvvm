@@ -1,9 +1,8 @@
 package com.ru.simplemvvm.application
 
 import android.os.Bundle
-import androidx.compose.ui.window.Dialog
 import com.ru.simplemvvm.R
-import com.ru.simplemvvm.application.view.CurrentColorFragment
+import com.ru.simplemvvm.application.view.currentcolor.CurrentColorFragment
 import com.ru.simplemvvm.foundation.sideeffects.SideEffectPluginManager
 import com.ru.simplemvvm.foundation.sideeffects.dialogs.plugin.DialogsPlugin
 import com.ru.simplemvvm.foundation.sideeffects.intents.plugin.IntentsPlugin

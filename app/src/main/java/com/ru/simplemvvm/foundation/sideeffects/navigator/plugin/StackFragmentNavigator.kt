@@ -1,6 +1,7 @@
 package com.ru.simplemvvm.foundation.sideeffects.navigator.plugin
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
@@ -24,7 +25,7 @@ class StackFragmentNavigator(
     private val defaultTitle: String,
     private val animations: Animations,
     private val initialScreenCreator: () -> BaseScreen
-) : Navigator, SideEffectImplementation(), LifecycleObserver {
+) : SideEffectImplementation(), Navigator, LifecycleObserver {
 
     private var result: Event<Any>? = null
 
@@ -33,7 +34,7 @@ class StackFragmentNavigator(
     }
 
     override fun goBack(result: Any?) {
-        if(result != null) {
+        if (result != null) {
             this.result = Event(result)
         }
         requireActivity().onBackPressed()
@@ -41,45 +42,45 @@ class StackFragmentNavigator(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requireActivity().lifecycle.addObserver(this)
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             launchFragment(
                 screen = initialScreenCreator(),
-                addToBackStack = false,
+                addToBackStack = false
             )
         }
-        requireActivity().supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentCallback, false)
+        requireActivity().supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentCallbacks, false)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
-        requireActivity().supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentCallback)
+        requireActivity().supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentCallbacks)
     }
 
     override fun onBackPressed(): Boolean {
-        val currentFragment = getCurrentFragment()
-        return if(currentFragment is BaseFragment) {
-            currentFragment.viewModel.onBackPressed()
+        val f = getCurrentFragment()
+        return if (f is BaseFragment) {
+            f.viewModel.onBackPressed()
         } else {
             false
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean? {
+    override fun onSupportNavigateUp(): Boolean {
         requireActivity().onBackPressed()
         return true
     }
 
     override fun onRequestUpdates() {
-        val currentFragment = getCurrentFragment()
+        val f = getCurrentFragment()
 
-        if(requireActivity().supportFragmentManager.backStackEntryCount > 0) {
+        if (requireActivity().supportFragmentManager.backStackEntryCount > 0) {
             requireActivity().supportActionBar?.setDisplayHomeAsUpEnabled(true)
         } else {
             requireActivity().supportActionBar?.setDisplayHomeAsUpEnabled(false)
         }
 
-        if(currentFragment is HasScreenTitle && currentFragment.getScreenTitle() != null) {
-            requireActivity().supportActionBar?.title = currentFragment.getScreenTitle()
+        if (f is HasScreenTitle && f.getScreenTitle() != null) {
+            requireActivity().supportActionBar?.title = f.getScreenTitle()
         } else {
             requireActivity().supportActionBar?.title = defaultTitle
         }
@@ -88,6 +89,7 @@ class StackFragmentNavigator(
     private fun launchFragment(screen: BaseScreen, addToBackStack: Boolean = true) {
         val fragment = screen.javaClass.enclosingClass.newInstance() as Fragment
         fragment.arguments = bundleOf(ARG_SCREEN to screen)
+
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         if (addToBackStack) transaction.addToBackStack(null)
         transaction
@@ -103,18 +105,17 @@ class StackFragmentNavigator(
 
     private fun publishResults(fragment: Fragment) {
         val result = result?.getValue() ?: return
-        if(fragment is BaseFragment){
+        if (fragment is BaseFragment) {
             fragment.viewModel.onResult(result)
         }
     }
-
 
     private fun getCurrentFragment(): Fragment? {
         return requireActivity().supportFragmentManager.findFragmentById(containerId)
     }
 
-    private val fragmentCallback = object : FragmentManager.FragmentLifecycleCallbacks() {
-        override fun onFragmentCreated(fm: FragmentManager, f: Fragment, savedInstanceState: Bundle?) {
+    private val fragmentCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
             onRequestUpdates()
             publishResults(f)
         }
