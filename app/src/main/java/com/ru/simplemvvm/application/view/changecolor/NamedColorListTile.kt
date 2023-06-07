@@ -1,4 +1,4 @@
-package com.ru.simplemvvm.application.viewmodel.changecolor
+package com.ru.simplemvvm.application.view.changecolor
 
 import com.ru.simplemvvm.application.data.model.NamedColorModel
 

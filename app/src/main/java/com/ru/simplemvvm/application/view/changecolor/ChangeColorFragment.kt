@@ -8,7 +8,6 @@ import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ru.simplemvvm.R
 import com.ru.simplemvvm.application.viewmodel.changecolor.ChangeColorViewModel
-import com.ru.simplemvvm.application.viewmodel.changecolor.ColorsAdapter
 import com.ru.simplemvvm.application.viewmodel.onTryAgain
 import com.ru.simplemvvm.application.viewmodel.renderSimpleResult
 import com.ru.simplemvvm.databinding.FragmentChangeColorBinding
@@ -19,17 +18,17 @@ import com.ru.simplemvvm.foundation.views.screenViewModel
 
 
 class ChangeColorFragment : BaseFragment(R.layout.fragment_change_color), HasScreenTitle  {
-    data class Screen(val currentColorId: Long): BaseScreen
+    class Screen(
+        val currentColorId: Long
+    ) : BaseScreen
 
     override val viewModel by screenViewModel<ChangeColorViewModel>()
+
     override fun getScreenTitle(): String? = viewModel.screenTitle.value
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentChangeColorBinding.inflate(inflater, container, false)
+
         val adapter = ColorsAdapter(viewModel)
         setupLayoutManager(binding, adapter)
 
@@ -39,9 +38,9 @@ class ChangeColorFragment : BaseFragment(R.layout.fragment_change_color), HasScr
         viewModel.viewState.observe(viewLifecycleOwner) { result ->
             renderSimpleResult(binding.root, result) { viewState ->
                 adapter.items = viewState.colorsList
-                binding.saveButton.visibility = if(viewState.showSaveButton) View.VISIBLE else View.GONE
-                binding.cancelButton.visibility = if(viewState.showCancelButton) View.VISIBLE else View.GONE
-                binding.saveProgressBar.visibility = if(viewState.showSaveProgressBar) View.VISIBLE else View.GONE
+                binding.saveButton.visibility = if (viewState.showSaveButton) View.VISIBLE else View.INVISIBLE
+                binding.cancelButton.visibility = if (viewState.showCancelButton) View.VISIBLE else View.INVISIBLE
+                binding.saveProgressBar.visibility = if (viewState.showSaveProgressBar) View.VISIBLE else View.GONE
             }
         }
 
@@ -57,7 +56,7 @@ class ChangeColorFragment : BaseFragment(R.layout.fragment_change_color), HasScr
     }
 
     private fun setupLayoutManager(binding: FragmentChangeColorBinding, adapter: ColorsAdapter) {
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener(object :  ViewTreeObserver.OnGlobalLayoutListener {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 binding.root.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val width = binding.root.width
@@ -66,6 +65,6 @@ class ChangeColorFragment : BaseFragment(R.layout.fragment_change_color), HasScr
                 binding.colorsRecyclerView.adapter = adapter
                 binding.colorsRecyclerView.layoutManager = GridLayoutManager(requireContext(), columns)
             }
-        },)
+        }, )
     }
 }

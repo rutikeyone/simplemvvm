@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import com.ru.simplemvvm.R
 import com.ru.simplemvvm.application.data.model.NamedColorModel
 import com.ru.simplemvvm.application.domain.repository.ColorRepository
 import com.ru.simplemvvm.application.view.changecolor.ChangeColorFragment
-import com.ru.simplemvvm.foundation.model.ErrorResult
-import com.ru.simplemvvm.foundation.model.FinalResult
+import com.ru.simplemvvm.application.view.changecolor.ColorsAdapter
+import com.ru.simplemvvm.application.view.changecolor.NamedColorListTile
 import com.ru.simplemvvm.foundation.model.PendingResult
 import com.ru.simplemvvm.foundation.model.SuccessResult
 import com.ru.simplemvvm.foundation.sideeffects.dialogs.Dialogs
@@ -49,13 +48,12 @@ class ChangeColorViewModel(
         get() = _viewState
 
     val screenTitle: LiveData<String> = viewState.map { result ->
-//        if(result is SuccessResult) {
-//            val currentColor = result.data.colorsList.first { it.selected }
-//            resources.getString(R.string.change_color_screen_title, currentColor.namedColor.name)
-//        } else {
-//            resources.getString(R.string.change_color_screen_title)
-//        }
-        "SSS";
+        if(result is SuccessResult) {
+            val currentColor = result.data.colorsList.first { it.selected }
+            resources.getString(R.string.change_color_screen_title, currentColor.namedColor.name)
+        } else {
+            resources.getString(R.string.change_color_screen_title_simple)
+        }
     }
 
     init {
